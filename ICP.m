@@ -7,7 +7,7 @@ clc;
 clear;
 close all;
 
-addpath('./func/')
+addpath('./func/');
 
 %导入没有下采样的点云
 src = pcread('./data/src.pcd').Location;
