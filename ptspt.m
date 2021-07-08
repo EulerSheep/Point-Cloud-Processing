@@ -4,6 +4,7 @@
 clc;
 clear;
 close all;
+addpath('./func/');
 
 %导入没有下采样的点云
 src = pcread('./data/src.pcd').Location;
@@ -52,18 +53,10 @@ while(iteration <= max_iteration)
     RQ(2:4,2:4) = RC + RC' - trace(RC)*eye(3,3);
     %找到RQ最大特征值对应的特征向量
     %计算特征值与特征向量
-    [x,y] = eig(RQ);%求矩阵Rq的全部特征值，构成对角阵y;特征向量构成矩阵x
-    e = diag(y);%对角阵
-    %======计算最大特征值对应的特征向量======
-    lamda=max(e);%最大特征值
-    for i=1:length(RQ)
-        if lamda==e(i)%寻找最大特征值的位置
-            break;
-        end
-    end
-    q=x(:,i);%i表示最大特征向量的位置
+    %求矩阵Rq的全部特征值，构成对角阵y;特征向量构成矩阵x
+    [~,q] = calfeaturevv(RQ,'max');
     q0=q(1);q1=q(2);q2=q(3);q3=q(4);
-    r = quat2dcm([q0 q1 q2 q3]);
+    r = quat2rmat(q0 ,q1, q2, q3);
     t = center_closestpoints - center_srcd*r;
     srcd = srcd * r + t;
     src = src*r + t;

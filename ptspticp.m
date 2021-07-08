@@ -26,7 +26,7 @@ max_iteration = 30;
 
 tic;
 while(iteration <= max_iteration)
-
+    clc;
     fprintf('当前迭代次数:%d\n',iteration);
     iteration = iteration+ 1;
     
@@ -54,16 +54,7 @@ while(iteration <= max_iteration)
     RQ(2:4,2:4) = RC + RC' - trace(RC)*eye(3,3);
     %找到RQ最大特征值对应的特征向量
     %计算特征值与特征向量
-    [x,y] = eig(RQ);%求矩阵Rq的全部特征值，构成对角阵y;特征向量构成矩阵x
-    e = diag(y);%对角阵
-    %======计算最大特征值对应的特征向量======
-    lamda=max(e);%最大特征值
-    for i=1:length(RQ)
-        if lamda==e(i)%寻找最大特征值的位置
-            break;
-        end
-    end
-    q=x(:,i);%i表示最大特征向量的位置
+    [~,q] = calfeaturevv(RQ,'max');
     q0=q(1);q1=q(2);q2=q(3);q3=q(4);
 %     r = quat2dcm([q0 q1 q2 q3]);%matlab自带
     r = quat2rmat(q0 ,q1, q2 ,q3);%自己写的
@@ -78,4 +69,4 @@ figure;
 pcshow(srcd,'green');hold on ;
 pcshow(tgtd,'red');
 axis off;
-title('ptspt配准后---点云分布','FontSize',20);
+title('修改后的icp算法配准','FontSize',20);
