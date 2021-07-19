@@ -13,6 +13,13 @@ addpath('./func/');
 src = pcread('./data/src.pcd').Location;
 tgt = pcread('./data/tgt.pcd').Location;
 
+% s = sum(src,1);
+% center = (s-1)./size(s,1);
+% src  = src -center;
+% figure;
+% pcshow(src,'green');hold on ;
+% title('去质心的点云，其实就是做了一个平移');
+
 figure;
 pcshow(src,'green');hold on ;
 pcshow(tgt,'red');
@@ -20,8 +27,9 @@ axis off;
 title('icp配准前','FontSize',20);
 
 %导入下采样的点云
-srcd = pcread('./data/src_down.pcd').Location;
-tgtd = pcread('./data/tgt_down.pcd').Location;
+srcd = downsampling(src,0.02);
+tgtd = downsampling(tgt,0.02);
+
 
 %原始点云与目标点云的大小不一定相同,以原始点数目为准
 %closestpoints为最近点，我们假定他为目标点云
@@ -29,6 +37,8 @@ closestpoints = zeros(size(srcd,1),3);
 distance = zeros(size(srcd,1),1);
 helper_distance = zeros(size(srcd,1),3);
 n = size(srcd,1);
+
+
 
 iteration = 1;%迭代次数
 max_iteration =30;%最大迭代次数
